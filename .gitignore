@@ -1,0 +1,14 @@
+# 빌드 결과물 (xcodebuild -derivedDataPath build)
+build/
+DerivedData/
+*.xcarchive
+
+# App Store 업로드용 패키지 (다시 만들 수 있음). 내보내기 설정 파일만 올립니다.
+dist/AppStore/
+
+# Xcode 사용자별 설정
+xcuserdata/
+*.xcuserstate
+
+# macOS
+.DS_Store

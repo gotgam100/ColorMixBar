@@ -1,0 +1,58 @@
+name: ColorMixBar
+options:
+  bundleIdPrefix: com.baekmac
+  deploymentTarget:
+    macOS: "14.0"
+  developmentLanguage: ko
+
+targets:
+  ColorMixBar:
+    type: application
+    platform: macOS
+    attributes:
+      SystemCapabilities:
+        com.apple.iCloud:
+          enabled: 1
+        com.apple.Sandbox:
+          enabled: 1
+    sources:
+      - path: Sources
+        excludes:
+          - Info.plist
+          - ColorMixBar.entitlements
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleName: ColorMix Bar
+        CFBundleDisplayName: ColorMix Bar
+        CFBundleDevelopmentRegion: ko
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        LSApplicationCategoryType: public.app-category.graphics-design
+        LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
+        # 메뉴바에만 보이고 Dock에는 나오지 않게 합니다.
+        LSUIElement: true
+        CFBundleLocalizations: [ko, en, ja]
+        NSHumanReadableCopyright: "© 2026 Seunghwa BAEK"
+        # 표준 암호화를 쓰지 않음 → 업로드 때 수출 규정 질문 생략
+        ITSAppUsesNonExemptEncryption: false
+    entitlements:
+      path: Sources/ColorMixBar.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        # 팔레트 파일 내보내기/가져오기 (사용자가 고른 파일만 접근)
+        com.apple.security.files.user-selected.read-write: true
+        # iCloud 동기화 (키-값 저장소). 팀으로 서명된 빌드에서만 동작합니다.
+        com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)$(CFBundleIdentifier)
+    settings:
+      base:
+        PRODUCT_NAME: ColorMixBar
+        PRODUCT_BUNDLE_IDENTIFIER: com.baekmac.ColorMixBar
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "4"
+        SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        # Xcode 자동 서명 (개발용 = Apple Development, App Store 내보내기 = 배포 인증서)
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: SB2Z6HL579
