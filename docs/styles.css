@@ -196,3 +196,13 @@ section:first-child > h2.group { margin-top: 0; color: rgba(255, 255, 255, 0.75)
 .hero:not(.small) { padding-bottom: 120px; }
 .hero:not(.small) + .wrap { margin-top: -96px; }
 .hero:not(.small) + .wrap section:first-child > h2.group { color: #ffffff; font-size: 20px; }
+
+/* 앱 이름은 한 줄로. 좁은 화면에서는 글자를 조금 줄인다 */
+.brand-name { white-space: nowrap; }
+@media (max-width: 520px) {
+  .brand-name { font-size: 28px; }
+  .hero.small .brand-name { font-size: 20px; }
+  .brand-sub { font-size: 13px; }
+  .logo { width: 46px; height: 46px; }
+  .hero.small .logo { width: 36px; height: 36px; }
+}
