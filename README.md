@@ -14,7 +14,7 @@
 - **섞기**: 색 칩을 섞기 접시로 끌어다 놓습니다. 같은 색을 여러 번 놓으면 그만큼 많이 섞입니다.
 - **팔레트**: 탭을 누르면 불러오고, `+`로 ‘새 팔레트1’, ‘새 팔레트2’… 를 만듭니다. 이름이나 탭을 오른쪽 클릭하면 이름 변경·복제·삭제.
 - **고정**: 제목 오른쪽 📌를 누르거나 제목 줄을 끌어 떼어내면, 다른 앱 위에 계속 떠 있는 창이 됩니다.
-- **설정**: 화면 모드, 언어(한국어/English), 로그인 시 실행, iCloud 동기화, 복사 형식, 초기화(완전 / 팔레트만).
+- **설정**: 화면 모드, 언어(한국어/English/日本語), 로그인 시 실행, iCloud 동기화, 복사 형식, 초기화(완전 / 팔레트만).
 
 ## 섞는 방식
 화면의 빛처럼 평균을 내면 파랑과 노랑이 회색이 되지만, 이 앱은 물감처럼 초록이 되게 섞습니다. [spectral.js](https://github.com/rvanwijnen/spectral.js) 3.0.0(MIT 라이선스)의 Kubelka-Munk 혼합 계산을 Swift로 옮겼고, 원본과 결과가 같은지 확인했습니다. 라이선스 전문은 앱의 설정 → 정보 → 오픈소스 라이선스에서 볼 수 있습니다.
@@ -27,9 +27,12 @@ xcodebuild -project ColorMixBar.xcodeproj -scheme ColorMixBar -configuration Rel
 ```
 
 ## App Store용 아카이브·내보내기
+Xcode에서 Product → Archive로 해도 되고, 터미널에서는 아래처럼 합니다. `BUILD`는 `project.yml`의 `CURRENT_PROJECT_VERSION`과 같게 맞춥니다.
 ```bash
-xcodebuild -project ColorMixBar.xcodeproj -scheme ColorMixBar -configuration Release -derivedDataPath build -allowProvisioningUpdates -archivePath "$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/ColorMixBar 1.0 (1).xcarchive" archive
-xcodebuild -exportArchive -archivePath "$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/ColorMixBar 1.0 (1).xcarchive" -exportOptionsPlist dist/ExportOptions.plist -exportPath dist/AppStore -allowProvisioningUpdates
+BUILD=4
+AR="$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/ColorMixBar 1.0 ($BUILD).xcarchive"
+xcodebuild -project ColorMixBar.xcodeproj -scheme ColorMixBar -configuration Release -derivedDataPath build -allowProvisioningUpdates -archivePath "$AR" archive
+xcodebuild -exportArchive -archivePath "$AR" -exportOptionsPlist dist/ExportOptions.plist -exportPath dist/AppStore -allowProvisioningUpdates
 ```
 - 아카이브는 Xcode → Window → Organizer에 보입니다. 거기서 **Distribute App**으로 바로 올려도 됩니다.
 - `dist/AppStore/ColorMix Bar.pkg`는 **Transporter** 앱으로 올릴 수 있습니다.
@@ -46,7 +49,10 @@ xcodebuild -exportArchive -archivePath "$HOME/Library/Developer/Xcode/Archives/$
 | `Sources/Localization.swift` | 앱 이름, 언어 전환(`L`), 화면 모드 |
 | `Sources/SpectralMixer.swift`, `SpectralData.swift` | 물감처럼 섞는 계산 |
 | `Sources/PrivacyInfo.xcprivacy` | App Store 개인정보 신고(추적·수집 없음, UserDefaults 사용 이유) |
-| `docs/` | 고객지원·개인정보 처리방침·이용약관·오픈소스 라이선스 웹페이지(한국어·영어·일본어, 일본어는 `docs/ja/`). 고친 뒤 GitHub 저장소 `gotgam100/ColorMixBar`의 `docs/`에 올리면 반영됩니다 |
+| `docs/` | 고객지원·개인정보 처리방침·이용약관·오픈소스 라이선스 웹페이지(한국어·영어·일본어, 일본어는 `docs/ja/`). 커밋·푸시하면 GitHub Pages에 반영됩니다 |
+| `tools/docs/` | 웹페이지 생성기. `python3 tools/docs/gen_docs.py docs Sources/Resources/spectral-js-LICENSE.txt` (일본어 내용은 `gen_docs_ja.py`, `docs/styles.css`는 직접 관리) |
+| `tools/screenshots/` | App Store 스크린샷 생성기. `tools/screenshots/make.sh` → `AppStoreScreenshots/`(한·영·일 각 5장, 2880×1800) |
+| `CLAUDE.md` | Claude Code 작업 안내(규칙, 주의할 점, 진행 상황) |
 
 저장 위치: `~/Library/Containers/com.baekmac.ColorMixBar/Data/Library/Application Support/ColorMixBar/palettes.json`
 
@@ -54,5 +60,5 @@ xcodebuild -exportArchive -archivePath "$HOME/Library/Developer/Xcode/Archives/$
 - [x] 개발자 계정에 앱 ID `com.baekmac.ColorMixBar` 등록 (iCloud 키-값 저장소 포함), 팀 `SB2Z6HL579` 자동 서명
 - [x] 이용약관·개인정보 처리방침 페이지(`docs/`)를 GitHub Pages로 공개: https://gotgam100.github.io/ColorMixBar/ — 앱의 이용약관 및 정책 버튼에 연결
 - [x] App Store용 아카이브(1.0, 빌드 4: 일본어 앱·일본어 웹페이지 연결 포함)와 `dist/AppStore/ColorMix Bar.pkg` 내보내기
-- [ ] App Store Connect에서 앱 만들기(이름 ColorMix Bar), 등록 정보 입력 (`APP_STORE.md`)
+- [x] App Store Connect 등록 정보 입력 (`APP_STORE.md`), 앱 개인정보·심사 연락처·개인정보 처리방침 URL
 - [ ] 업로드 (Organizer의 Distribute App 또는 Transporter)
